@@ -71,7 +71,7 @@ __Inject__
 ```java
 public class MainActivity : AppCompatActivity() {
 
-    var kotlinSite: KotlinSite by Delegates.notNull()
+    var okHttpClient: OkHttpClient by Delegates.notNull()
         [Inject] set
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,7 +122,7 @@ constructor injection.
 ```java
 Singleton
 public class SingletonObject [Inject] () {
-  //...   
+  //...
 }
 ```
 
