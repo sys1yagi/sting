@@ -8,7 +8,7 @@ Sting is DI library for Kotlin.
 
 Sting does not use APT. So there is a performance issue. You __should not__ use this for your product.
 
-# Getting Start
+# Getting Started
 
 Not yet upload to Bintray. You need checkout and reference library.
 
