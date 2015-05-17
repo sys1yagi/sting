@@ -77,9 +77,9 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
     }
 
     fun <T> injectFromModules(target: T, method: Method): Boolean {
-        @ModuleInject modules.forEach {
+        modules.forEach {
             if (injectFromModule(target, method, it)) {
-                @ModuleInject return true
+                return true
             }
         }
         return false
@@ -87,11 +87,11 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
 
     fun <T> extractConstructor(argsType: Class<T>): Constructor<T> {
         val constructors = argsType.getConstructors()
-        @FindConstructor constructors.forEach {
+        constructors.forEach {
             it.getAnnotations()
             val annotation = it.getAnnotation(javaClass<Inject>())
             if (annotation != null) {
-                @FindConstructor return it as Constructor<T>
+                return it as Constructor<T>
             }
         }
         throw IllegalArgumentException("can't found constructor for injection : " + argsType)
@@ -99,20 +99,20 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
 
     fun <T> getFromModule(clazz: Class<T>, module: Any): T? {
         val provides = getModuleProvidesMethods(module)
-        @ModuleGet provides.forEach {
+        provides.forEach {
             val returnType = it.getReturnType()
             if (clazz.equals(returnType)) {
-                @ModuleGet return it.invoke(module) as T
+                return it.invoke(module) as T
             }
         }
         return null
     }
 
     fun <T> getFromModules(clazz: Class<T>): T? {
-        @ModuleGet modules.forEach {
+        modules.forEach {
             val value = getFromModule(clazz, it)
             if (value != null) {
-                @ModuleGet return value
+                return value
             }
         }
         return null
