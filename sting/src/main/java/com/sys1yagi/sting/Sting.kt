@@ -54,9 +54,9 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
 
     fun <T> injectFromModule(target: T, method: Method, module: Any): Boolean {
         val provides = getModuleProvidesMethods(module)
+        val args = method.getParameterTypes().first()
         provides.forEach {
             val clazz = it.getReturnType()
-            val args = method.getParameterTypes().first()
             if (clazz.equals(args)) {
                 //umm...
                 method.setAccessible(true)
