@@ -189,6 +189,24 @@ public class ObjectGraphTest : ApplicationTestCase<Application>(javaClass<Applic
         assertThat(injected.a, `is`(injected.b))
     }
 
+    //inject to module
+    Test
+    public fun injectToModule() {
+        val graph = ObjectGraph.create(AppModule(), AppModule5());
+        val injected = Injected2()
+        graph.inject(injected)
+        assertThat(injected.awesomeUtil, `is`(notNullValue()))
+        assertThat(injected.awesomeUtil.model, `is`(notNullValue()))
+        assertThat(injected.awesomeUtil.model.a, `is`("model"))
+        assertThat(injected.awesomeUtil.model.b, `is`(10))
+    }
+
+    //inheritance
+
+    //bind provider
+
+    //include annotation
+
     //TODO
     //scope support
 

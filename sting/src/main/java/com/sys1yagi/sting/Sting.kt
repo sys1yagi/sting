@@ -18,6 +18,12 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
 
     var singletonHolder = HashMap<Class<*>, Any>()
 
+    init {
+        modules.forEach {
+            inject(it)
+        }
+    }
+
     fun <T> extractMethodInjection(target: T): List<Method> {
         val clazz: Class<Any> = target.javaClass
         if (injectMethodCache.containsKey(clazz)) {
@@ -52,14 +58,14 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
         return provides
     }
 
-    fun <T> injectFromModule(target: T, method: Method, module: Any): Boolean {
+    fun <T> injectFromModule(target: T, setter: Method, module: Any): Boolean {
         val provides = getModuleProvidesMethods(module)
-        val args = method.getParameterTypes().first()
+        val args = setter.getParameterTypes().first()
         provides.forEach {
             val clazz = it.getReturnType()
             if (clazz.equals(args)) {
                 //umm...
-                method.setAccessible(true)
+                setter.setAccessible(true)
                 val instance = if (singletonHolder.containsKey(args)) {
                     singletonHolder.get(args)
                 } else {
@@ -69,16 +75,16 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
                 if (it.getAnnotation(javaClass<Singleton>()) != null) {
                     singletonHolder.put(args, instance)
                 }
-                method.invoke(target, instance)
+                setter.invoke(target, instance)
                 return true
             }
         }
         return false
     }
 
-    fun <T> injectFromModules(target: T, method: Method): Boolean {
+    fun <T> injectFromModules(target: T, setter: Method): Boolean {
         modules.forEach {
-            if (injectFromModule(target, method, it)) {
+            if (injectFromModule(target, setter, it)) {
                 return true
             }
         }
@@ -88,7 +94,6 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
     fun <T> extractConstructor(argsType: Class<T>): Constructor<T> {
         val constructors = argsType.getConstructors()
         constructors.forEach {
-            it.getAnnotations()
             val annotation = it.getAnnotation(javaClass<Inject>())
             if (annotation != null) {
                 return it as Constructor<T>
