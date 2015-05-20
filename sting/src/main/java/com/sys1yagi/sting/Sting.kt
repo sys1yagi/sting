@@ -12,7 +12,7 @@ import javax.inject.Singleton
  */
 public class Sting(val modules: Array<out Any>) : ObjectGraph {
 
-    var injectMethodCache = HashMap<Class<Any>, List<Method>>()
+    var injectMethodCache = HashMap<Class<in Any>, List<Method>>()
 
     var providedMethods = HashMap<Any, List<Method>>()
 
@@ -24,14 +24,12 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
         }
     }
 
-    fun <T> extractMethodInjection(target: T): List<Method> {
-        val clazz: Class<Any> = target.javaClass
+    fun extractMethodInjection(clazz: Class<in Any>, methods: MutableList<Method>): List<Method> {
         if (injectMethodCache.containsKey(clazz)) {
-            return injectMethodCache.get(clazz)
+            methods.addAll(injectMethodCache.get(clazz))
+            return methods
         }
-
         val fields = clazz.getDeclaredMethods()
-        val methods = ArrayList<Method>()
         fields.forEach {
             val annotation = it.getAnnotation(javaClass<Inject>());
             if (annotation != null) {
@@ -39,6 +37,17 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
             }
         }
         injectMethodCache.put(clazz, methods)
+        return methods
+    }
+
+    fun <T> extractMethodInjection(target: T): List<Method> {
+        var methods = ArrayList<Method>()
+        var clazz: Class<in Any> = target.javaClass
+        do {
+            extractMethodInjection(clazz, methods)
+            clazz = clazz.getSuperclass()
+        } while (clazz.getSuperclass() != null)
+
         return methods
     }
 

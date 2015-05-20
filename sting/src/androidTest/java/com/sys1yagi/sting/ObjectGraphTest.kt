@@ -163,13 +163,13 @@ public class ObjectGraphTest : ApplicationTestCase<Application>(javaClass<Applic
     Test
     public fun singletonProvides() {
         val graph = ObjectGraph.create(AppModule4());
-        val injected1 = Injected5()
+        val injected1 = Injected()
         graph.inject(injected1)
-        val injected2 = Injected5()
-        graph.inject(injected2)
+        val injected5 = Injected5()
+        graph.inject(injected5)
         assertThat(injected1.model, `is`(notNullValue()))
-        assertThat(injected2.model, `is`(notNullValue()))
-        assertThat(injected1.model, `is`(injected2.model))
+        assertThat(injected5.model, `is`(notNullValue()))
+        assertThat(injected1.model, `is`(injected5.model))
     }
 
     class Injected6 {
@@ -202,6 +202,21 @@ public class ObjectGraphTest : ApplicationTestCase<Application>(javaClass<Applic
     }
 
     //inheritance
+    class Injected7 {
+        var awesomeUtil2: AwesomeUtil2 by Delegates.notNull()
+            [Inject] set
+    }
+
+    Test
+    public fun inheritance() {
+        val graph = ObjectGraph.create(AppModule())
+        val injected = Injected7()
+        graph.inject(injected)
+        assertThat(injected.awesomeUtil2, `is`(notNullValue()))
+        assertThat(injected.awesomeUtil2.model, `is`(notNullValue()))
+        assertThat(injected.awesomeUtil2.model.a, `is`("model"))
+        assertThat(injected.awesomeUtil2.model.b, `is`(10))
+    }
 
     //bind provider
 
