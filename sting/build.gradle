@@ -28,7 +28,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.1.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'javax.inject:javax.inject:1'
     androidTestCompile 'com.android.support.test:testing-support-lib:0.1'
@@ -39,14 +38,20 @@ dependencies {
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.1'
 }
 buildscript {
-    ext.kotlin_version = '0.11.91.4'
+    ext.kotlin_version = '0.12.1218'
     repositories {
-        mavenCentral()
+        jcenter()
+        maven {
+            url 'http://oss.sonatype.org/content/repositories/snapshots'
+        }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 repositories {
-    mavenCentral()
+    jcenter()
+    maven {
+        url 'http://oss.sonatype.org/content/repositories/snapshots'
+    }
 }
