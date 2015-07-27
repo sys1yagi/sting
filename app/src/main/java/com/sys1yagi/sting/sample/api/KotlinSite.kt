@@ -9,13 +9,15 @@ import java.io.IOException
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-public class KotlinSite [Inject]() {
+public class KotlinSite {
+
+    @Inject constructor()
 
     private var handler: Handler by Delegates.notNull()
-        [Inject] set
+        @Inject set
 
     private var okHttpClient: OkHttpClient by Delegates.notNull()
-        [Inject] set
+        @Inject set
 
     fun getSite(success: (String?) -> Unit, error: (Exception?) -> Unit) {
         val request = Request.Builder().url("http://kotlinlang.org/").get().build()

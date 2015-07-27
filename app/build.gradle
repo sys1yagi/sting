@@ -42,7 +42,7 @@ dependencies {
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.1'
 }
 buildscript {
-    ext.kotlin_version = '0.11.91.4'
+    ext.kotlin_version = '0.12.1218'
     repositories {
         mavenCentral()
     }
