@@ -8,5 +8,5 @@ import java.lang.annotation.Target
 Retention(RetentionPolicy.RUNTIME)
 Target(ElementType.TYPE)
 annotation public class Module(
-        public vararg val includes: Class<*> = array()
+        public vararg val includes: Class<*> = arrayOf()
 )

@@ -111,7 +111,7 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
         throw IllegalArgumentException("can't found constructor for injection : " + argsType)
     }
 
-    fun <T> getFromModule(clazz: Class<T>, module: Any): T? {
+    fun <T> getFromModule(clazz: Class<T>, module: Any): T {
         val provides = getModuleProvidesMethods(module)
         provides.forEach {
             val returnType = it.getReturnType()
@@ -122,7 +122,7 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
         return null
     }
 
-    fun <T> getFromModules(clazz: Class<T>): T? {
+    fun <T> getFromModules(clazz: Class<T>): T {
         modules.forEach {
             val value = getFromModule(clazz, it)
             if (value != null) {
@@ -163,13 +163,13 @@ public class Sting(val modules: Array<out Any>) : ObjectGraph {
     }
 
     override fun <T> get(clazz: Class<T>): T {
-        var value: T? = getFromModules(clazz)
+        var value: T = getFromModules(clazz)
         if (value != null) {
-            return value!!
+            return value
         }
         value = instantiate(clazz)
         if (value != null) {
-            return value!!
+            return value
         }
 
         throw IllegalStateException("can't find object :" + clazz)
